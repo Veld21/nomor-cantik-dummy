@@ -39,14 +39,12 @@ export default function Footer() {
         <div>
           <h4 className="font-display text-sm font-semibold text-white">Hubungi Kami</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li>WhatsApp: 0812-8484-8246</li>
-            <li>Email: halo@nomorcantik.id</li>
             <li>Jakarta, Indonesia</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10 py-5 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} NomorCantik.id — Dummy prototype untuk keperluan presentasi.
+        © {new Date().getFullYear()} NomorCantik.id
       </div>
     </footer>
   );

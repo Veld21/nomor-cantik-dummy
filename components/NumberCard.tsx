@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { PhoneNumber, formatRupiah, getProvider, getVendor } from "@/lib/data";
+import { PhoneNumber, formatRupiah, findById } from "@/lib/data";
+import { useDataStore } from "@/lib/data-store";
 import PhoneDigits from "./PhoneDigits";
 import { StatusBadge, CategoryBadge } from "./Badges";
 
 export default function NumberCard({ item }: { item: PhoneNumber }) {
-  const provider = getProvider(item.providerId);
-  const vendor = getVendor(item.vendorId);
+  const { providers } = useDataStore();
+  const provider = findById(providers, item.providerId);
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-surface p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover">
@@ -26,7 +29,6 @@ export default function NumberCard({ item }: { item: PhoneNumber }) {
 
       <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
         <div>
-          <p className="text-xs text-slate-400">{vendor?.name}</p>
           <p className="font-display text-lg font-bold text-ink">{formatRupiah(item.price)}</p>
         </div>
         <Link

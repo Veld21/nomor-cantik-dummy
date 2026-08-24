@@ -1,49 +1,56 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { categories, providers, vendors, NumberCategory, NumberStatus, PhoneNumber } from "@/lib/data";
-import { NewNumberInput } from "@/lib/admin-store";
+import { categories, NumberCategory, NumberStatus, PhoneNumber, Provider, Vendor } from "@/lib/data";
+import { NewNumberInput } from "@/lib/data-store";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (input: NewNumberInput) => { ok: boolean; error?: string };
+  onSubmit: (input: NewNumberInput) => Promise<{ ok: boolean; error?: string }>;
   initial?: PhoneNumber | null;
+  providers: Provider[];
+  vendors: Vendor[];
 }
 
-const emptyForm: NewNumberInput = {
-  number: "",
-  providerId: providers[0].id,
-  vendorId: vendors[0].id,
-  price: 1000000,
-  category: categories[0],
-  status: "available",
-  description: "",
-};
+function buildEmptyForm(providers: Provider[], vendors: Vendor[]): NewNumberInput {
+  return {
+    number: "",
+    providerId: providers[0]?.id ?? "",
+    vendorId: vendors[0]?.id ?? "",
+    price: 1000000,
+    category: categories[0],
+    status: "available",
+    description: "",
+  };
+}
 
-export default function NumberFormModal({ open, onClose, onSubmit, initial }: Props) {
-  const [form, setForm] = useState<NewNumberInput>(emptyForm);
+export default function NumberFormModal({ open, onClose, onSubmit, initial, providers, vendors }: Props) {
+  const [form, setForm] = useState<NewNumberInput>(buildEmptyForm(providers, vendors));
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (initial) {
       const { id, ...rest } = initial;
       setForm(rest);
     } else {
-      setForm(emptyForm);
+      setForm(buildEmptyForm(providers, vendors));
     }
     setError("");
-  }, [initial, open]);
+  }, [initial, open, providers, vendors]);
 
   if (!open) return null;
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!form.number.trim()) {
       setError("Nomor tidak boleh kosong.");
       return;
     }
-    const result = onSubmit(form);
+    setSubmitting(true);
+    const result = await onSubmit(form);
+    setSubmitting(false);
     if (!result.ok) {
       setError(result.error ?? "Gagal menyimpan nomor.");
       return;
@@ -170,9 +177,10 @@ export default function NumberFormModal({ open, onClose, onSubmit, initial }: Pr
             </button>
             <button
               type="submit"
-              className="rounded-full bg-sapphire-600 px-5 py-2 text-sm font-semibold text-white hover:bg-sapphire-700"
+              disabled={submitting}
+              className="rounded-full bg-sapphire-600 px-5 py-2 text-sm font-semibold text-white hover:bg-sapphire-700 disabled:opacity-60"
             >
-              Simpan
+              {submitting ? "Menyimpan..." : "Simpan"}
             </button>
           </div>
         </form>

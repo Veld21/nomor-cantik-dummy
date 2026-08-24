@@ -5,11 +5,11 @@ export default function PhoneDigits({
   number: string;
   size?: "sm" | "md" | "lg";
 }) {
-const sizes = {
-  sm: "text-lg gap-1.5",
-  md: "text-2xl gap-2",
-  lg: "text-3xl sm:text-4xl gap-2",
-} as const;
+  const sizes = {
+    sm: "text-lg gap-1.5",
+    md: "text-2xl gap-2",
+    lg: "text-3xl sm:text-4xl gap-2",
+  } as const;
 
   const groups = number.split("-");
 

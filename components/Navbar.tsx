@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { whatsappGenericLink } from "@/lib/data";
 
 const links = [
   { href: "/", label: "Home" },
@@ -14,6 +15,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const waLink = whatsappGenericLink();
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-surface/90 backdrop-blur">
@@ -42,9 +44,10 @@ export default function Navbar() {
         </div>
 
         <a
-          href="https://wa.me/6281284848246"
+          href={waLink}
           target="_blank"
           rel="noopener noreferrer"
+          aria-disabled={waLink === "#"}
           className="hidden items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-card transition hover:bg-emerald-600 md:inline-flex"
         >
           Chat WhatsApp
@@ -75,7 +78,7 @@ export default function Navbar() {
               </Link>
             ))}
             <a
-              href="https://wa.me/6281284848246"
+              href={waLink}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white"
